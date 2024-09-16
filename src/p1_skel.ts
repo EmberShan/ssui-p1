@@ -851,6 +851,7 @@ class Target extends ScreenObject {
       this._visible &&
       this.pickedBy(ptX, ptY)
     ) {
+      // when the user clicks inside the target, 
       // record the end of the current trial and start a new one
       this._parentUI.recordTrialEnd(ptX, ptY, this.radius * 2);
       this._parentUI.newTrial();
@@ -956,9 +957,7 @@ class Reticle extends Target {
     ) {
       return true;
     }
-    // === REMOVE THE FOLLOWING CODE (which is here so the skeleton code compiles) ===
     return false;
-    // === END OF CODE TO BE REMOVED ===
   }
 
   // . . . . . . . . . . . .  . . . . . . . . . . . . . . . . . . . . . .
@@ -973,7 +972,8 @@ class Reticle extends Target {
       this._visible &&
       this.pickedBy(ptX, ptY)
     ) {
-      // begin recording the trial start time
+      // when the user clicks inside the reticle, 
+      // begin recording the trial start time and move to the next state
       this._parentUI.startTrial(ptX, ptY);
       this._parentUI.configure("in_trial");
       return true;
