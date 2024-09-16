@@ -468,7 +468,7 @@ class FittsTestUI extends UIClass {
                 this.theBackground.msg2 = this.theBackground.msg3 = "";
                 // start showing the reticles
                 this.theReticle.visible = true;
-                // hiding the target, this is for trials after the first one
+                // hiding the target. After the first trial, this becomes useful.
                 this.theTarget.visible = false;
                 break;
             case "in_trial":
@@ -608,7 +608,7 @@ class Target extends ScreenObject {
     // Draw the object as a filled and outlined circle
     draw(ctx) {
         // === YOUR CODE HERE ===
-        // draw circle
+        // draw circle only when it is visible
         if (this._parentUI.theTarget._visible) {
             ctx.beginPath();
             ctx.arc(this.centerX, this.centerY, this.radius, 0, 2 * Math.PI);
@@ -621,13 +621,13 @@ class Target extends ScreenObject {
     // Pick function.  We only pick within our circle, not the entire bounding box
     pickedBy(ptX, ptY) {
         // === YOUR CODE HERE ===
+        // the click will fall into the circle if the distance of the click to the center 
+        // should be equal to or smaller than the radius of the inner circle
         if (Math.sqrt((ptX - this.centerX) ** 2 + (ptY - this.centerY) ** 2) <=
             this.radius) {
             return true;
         }
-        // === REMOVE THE FOLLOWING CODE (which is here so the skeleton code compiles) ===
         return false;
-        // === END OF CODE TO BE REMOVED ===
     }
     // . . . . . . . . . . . .  . . . . . . . . . . . . . . . . . . . . . .
     // Handle click input.  The interface should be in the 'in_trial' state,
@@ -636,11 +636,11 @@ class Target extends ScreenObject {
     handleClickAt(ptX, ptY) {
         // === YOUR CODE HERE ===
         // check if in trial and if the target is hit
-        if (this._parentUI.currentState == "in_trial" &&
+        if (this._parentUI.currentState === "in_trial" &&
             this._visible &&
             this.pickedBy(ptX, ptY)) {
             // record the end of the current trial and start a new one
-            this._parentUI.recordTrialEnd(ptX, ptY, Math.PI * this.radius ** 2);
+            this._parentUI.recordTrialEnd(ptX, ptY, this.radius * 2);
             this._parentUI.newTrial();
             return true;
         }
@@ -718,7 +718,7 @@ class Reticle extends Target {
     // by starting the trial timer and moving to the 'in_trial' state.
     handleClickAt(ptX, ptY) {
         // === YOUR CODE HERE ===
-        if (this._parentUI.currentState == "begin_trial" &&
+        if (this._parentUI.currentState === "begin_trial" &&
             this._visible &&
             this.pickedBy(ptX, ptY)) {
             // begin recording the trial start time
@@ -808,7 +808,7 @@ class BackgroundDisplay extends ScreenObject {
         // this function is triggered by the FittsTestUI configure function
         // to start a new trial by reacting to a click anywhere in the canvas
         // return true so the canvas knows there is a need to redraw
-        if (this._parentUI.currentState == "start") {
+        if (this._parentUI.currentState === "start") {
             this._parentUI.newTrial();
             return true;
         }
